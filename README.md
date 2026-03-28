@@ -57,14 +57,44 @@ A professional, full-stack web application for browsing hotels, booking rooms, a
      ./run_project.bat
      ```
    - Build and start the backend:
-     ```bash
-     npm start
-     ```
-   - Open `frontend/index.html` in your browser.
+    ## 📈 Dashboard & Admin
+- **Admin**: Login with `admin@hotel.com` / `admin123` to manage hotels and rooms.
+- **User Dashboard**: Track your bookings and leave reviews.
 
-## 📄 License
+---
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 🚀 Deployment (Render)
+
+This project is optimized for continuous deployment on [Render](https://render.com).
+
+### 1. Database Setup
+Ensure you have a live MySQL database (e.g., Aiven, PlanetScale, or a Render managed DB).
+
+### 2. Connect GitHub to Render
+1. Log in to your **Render Dashboard**.
+2. Click **New +** -> **Web Service**.
+3. Connect your GitHub account and select this repository (**TARIK-DBMS-POSTLAB**).
+
+### 3. Configure Web Service
+- **Root Directory**: (Leave blank)
+- **Environment**: `Node`
+- **Build Command**: `npm install && cd backend && npm install`
+- **Start Command**: `npm start`
+
+### 4. Environment Variables
+Click on **Advanced** -> **Add Environment Variable**:
+- `DB_HOST`: Your database host address
+- `DB_USER`: Your database username
+- `DB_PASS`: Your database password
+- `DB_NAME`: Your database name
+- `JWT_SECRET`: A secure random string
+- `PORT`: `5000` (Optional, Render assigns automatically)
+
+---
+
+## 📜 License
+This project is licensed under the MIT License.
+ - see the [LICENSE](LICENSE) file for details.
 
 ## 🤝 Contributing
 

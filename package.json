@@ -1,0 +1,15 @@
+{
+  "name": "hotel-reservation-system",
+  "version": "1.0.0",
+  "description": "Full-stack Hotel Reservation System",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "install-all": "npm install && cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {}
+}
