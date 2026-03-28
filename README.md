@@ -4,9 +4,14 @@ A professional, full-stack web application for browsing hotels, booking rooms, a
 
 ## 🚀 Features
 
+- **Animated UI**: Smooth scroll-reveal animations and micro-interactions for a premium feel.
+- **Modern Icons**: Fully iconified interface using FontAwesome 6.
 - **User Authentication**: Secure login and registration system.
 - **Hotel Browsing**: View available hotels with detailed descriptions and high-quality images.
 - **Room Selection**: Choose specific room types based on availability.
+- **Rating & Review System**: Users can rate hotels and leave detailed comments.
+- **Advanced Search**: Filter hotels by location, price range, and capacity.
+- **Professional Checkout**: Sleek, multi-step mock payment simulation.
 - **Booking System**: Seamless reservation process with status tracking.
 - **Admin Dashboard**: Manage hotels, rooms, and view all customer bookings.
 - **Responsive Design**: Fully optimized for desktop and mobile devices.

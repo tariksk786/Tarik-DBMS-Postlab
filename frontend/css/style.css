@@ -35,10 +35,54 @@
   --shadow-glow-gold: 0 0 30px rgba(245,200,66,0.2);
   --shadow-glow-accent: 0 0 30px rgba(79,142,247,0.25);
 
-  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
   --font-main: 'Inter', sans-serif;
   --font-display: 'Playfair Display', serif;
 }
+
+/* ─── Animations ─────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: var(--transition-slow);
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: var(--transition-slow);
+}
+.reveal-left.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: var(--transition-slow);
+}
+.reveal-right.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.floating { animation: float 6s ease-in-out infinite; }
 
 /* ─── Reset ──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -94,7 +138,10 @@ ul { list-style: none; }
   color: #000; transition: var(--transition);
   box-shadow: 0 4px 15px rgba(245,200,66,0.3);
 }
-.btn-nav:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(245,200,66,0.4); }
+.btn-nav:hover { 
+  transform: translateY(-2px) scale(1.05); 
+  box-shadow: 0 8px 25px rgba(245,200,66,0.5); 
+}
 #userMenuBtn {
   display: flex; align-items: center; gap: 0.5rem;
   background: var(--bg-card); border: 1px solid var(--border);

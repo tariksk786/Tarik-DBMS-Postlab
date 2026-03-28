@@ -6,6 +6,7 @@
   <title>Admin Dashboard – LuxeStay</title>
   <meta name="description" content="Manage hotels, rooms, bookings, and users from the LuxeStay admin dashboard."/>
   <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .chart-box { background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
@@ -18,28 +19,27 @@
 <div id="page-loader"><div class="logo-text">LuxeStay</div><div class="spinner"></div></div>
 
 <nav class="navbar">
-  <a href="index.html" class="nav-logo">🏨 LuxeStay</a>
-  <div class="nav-links">
-    <a href="index.html" class="hide-mobile">← Site</a>
-    <span style="color:var(--gold);font-size:0.85rem;font-weight:600;">⚙️ Admin Panel</span>
-    <button id="userMenuBtn" style="display:none;">👤 <span class="user-name"></span></button>
-    <a href="login.html" id="navLoginLink" class="btn-nav">Login</a>
-    <a id="navAdminLink" href="admin.html"></a>
-    <button id="navLogout" class="btn btn-secondary btn-sm" style="display:none;" onclick="Auth.logout()">Logout</button>
-  </div>
+    <a href="index.html" class="nav-logo"><i class="fas fa-hotel"></i> LuxeStay</a>
+    <div class="nav-links">
+      <a href="index.html" class="hide-mobile"><i class="fas fa-globe"></i> Site</a>
+      <span style="color:var(--gold);font-size:0.85rem;font-weight:600;"><i class="fas fa-cog"></i> Admin Panel</span>
+      <button id="userMenuBtn" style="display:none;"><i class="fas fa-user-circle"></i> <span class="user-name"></span></button>
+      <a href="login.html" id="navLoginLink" class="btn-nav">Login</a>
+      <button id="navLogout" class="btn btn-secondary btn-sm" style="display:none;" onclick="Auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
 </nav>
 
 <div class="dashboard-layout">
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-title">Admin Menu</div>
-    <div class="sidebar-item active" data-tab-trigger="overview"><span>📊</span><span>Overview</span></div>
-    <div class="sidebar-item" data-tab-trigger="hotels"><span>🏨</span><span>Hotels</span></div>
-    <div class="sidebar-item" data-tab-trigger="rooms"><span>🚪</span><span>Rooms</span></div>
-    <div class="sidebar-item" data-tab-trigger="bookings"><span>📋</span><span>Bookings</span></div>
-    <div class="sidebar-item" data-tab-trigger="users"><span>👥</span><span>Users</span></div>
+    <div class="sidebar-item active" data-tab-trigger="overview"><span><i class="fas fa-chart-line"></i></span><span>Overview</span></div>
+    <div class="sidebar-item" data-tab-trigger="hotels"><span><i class="fas fa-hotel"></i></span><span>Hotels</span></div>
+    <div class="sidebar-item" data-tab-trigger="rooms"><span><i class="fas fa-door-open"></i></span><span>Rooms</span></div>
+    <div class="sidebar-item" data-tab-trigger="bookings"><span><i class="fas fa-clipboard-list"></i></span><span>Bookings</span></div>
+    <div class="sidebar-item" data-tab-trigger="users"><span><i class="fas fa-users"></i></span><span>Users</span></div>
     <hr class="divider" style="margin:0.75rem 0;"/>
-    <div class="sidebar-item" onclick="Auth.logout()" style="color:var(--danger);"><span>🚪</span><span>Logout</span></div>
+    <div class="sidebar-item" onclick="Auth.logout()" style="color:var(--danger);"><span><i class="fas fa-sign-out-alt"></i></span><span>Logout</span></div>
   </aside>
 
   <main class="main-content">
@@ -47,11 +47,11 @@
     <!-- OVERVIEW TAB -->
     <div id="tab-overview">
       <div class="page-header"><h1>Dashboard Overview</h1><p>Real-time hotel & booking analytics</p></div>
-      <div class="stat-grid" style="margin-bottom:2rem;">
-        <div class="stat-card"><div class="stat-icon gold">💰</div><div><div class="stat-value" id="statRevenue">$0</div><div class="stat-label">Total Revenue</div></div></div>
-        <div class="stat-card"><div class="stat-icon blue">📋</div><div><div class="stat-value" id="statBookings">0</div><div class="stat-label">Total Bookings</div></div></div>
-        <div class="stat-card"><div class="stat-icon green">🏨</div><div><div class="stat-value" id="statHotels">0</div><div class="stat-label">Hotels</div></div></div>
-        <div class="stat-card"><div class="stat-icon purple">👥</div><div><div class="stat-value" id="statUsers">0</div><div class="stat-label">Registered Users</div></div></div>
+      <div class="stat-grid reveal" style="margin-bottom:2rem;">
+        <div class="stat-card"><div class="stat-icon gold"><i class="fas fa-dollar-sign"></i></div><div><div class="stat-value" id="statRevenue">$0</div><div class="stat-label">Total Revenue</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-clipboard-list"></i></div><div><div class="stat-value" id="statBookings">0</div><div class="stat-label">Total Bookings</div></div></div>
+        <div class="stat-card"><div class="stat-icon green"><i class="fas fa-hotel"></i></div><div><div class="stat-value" id="statHotels">0</div><div class="stat-label">Hotels</div></div></div>
+        <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-users"></i></div><div><div class="stat-value" id="statUsers">0</div><div class="stat-label">Registered Users</div></div></div>
       </div>
       <div class="charts-grid">
         <div class="chart-box">
@@ -140,8 +140,9 @@
   </main>
 </div>
 
-<div id="toast-container"></div>
-<script src="js/api.js"></script>
-<script src="js/admin.js"></script>
+  <div id="toast-container"></div>
+  <script src="js/api.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/admin.js"></script>
 </body>
 </html>

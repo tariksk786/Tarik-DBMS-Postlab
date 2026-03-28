@@ -8,6 +8,7 @@
   <meta name="description"
     content="Find and book the world's finest hotels. Search by location, filter by price and rating. Best rates guaranteed." />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 
 <body>
@@ -20,24 +21,24 @@
 
   <!-- Navbar -->
   <nav class="navbar">
-    <a href="index.html" class="nav-logo">🏨 LuxeStay</a>
+    <a href="index.html" class="nav-logo"><i class="fas fa-hotel"></i> LuxeStay</a>
     <div class="nav-links">
       <a href="index.html" class="active hide-mobile">Hotels</a>
       <a href="dashboard.html" class="hide-mobile" id="navDashLink">My Bookings</a>
       <a href="admin.html" id="navAdminLink" class="hide-mobile">Admin</a>
       <a href="login.html" id="navLoginLink" class="btn-nav">Login</a>
       <button id="userMenuBtn" style="display:none;">
-        👤 <span class="user-name"></span>
+        <i class="fas fa-user-circle"></i> <span class="user-name"></span>
       </button>
-      <button id="navLogout" class="btn btn-secondary btn-sm hide-mobile" style="display:none;">Logout</button>
+      <button id="navLogout" class="btn btn-secondary btn-sm hide-mobile" style="display:none;"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <section class="hero">
+  <section class="hero revelation">
     <div class="hero-bg"></div>
-    <div class="hero-content">
-      <div class="hero-badge">✨ Over 500+ Premium Hotels Worldwide</div>
+    <div class="hero-content reveal">
+      <div class="hero-badge"><i class="fas fa-star"></i> Over 500+ Premium Hotels Worldwide</div>
       <h1 class="hero-title">
         Find Your Perfect<br /><span class="highlight">Luxury Escape</span>
       </h1>
@@ -45,27 +46,27 @@
         Discover handpicked hotels with unbeatable rates. Your dream stay is just a search away.
       </p>
       <!-- Search Box -->
-      <div class="search-box">
+      <div class="search-box floating">
         <div class="search-field">
-          <label>📍 Location</label>
+          <label><i class="fas fa-map-marker-alt"></i> Location</label>
           <input type="text" id="searchLocation" placeholder="City, Country…" />
         </div>
         <div class="search-field">
-          <label>💰 Min Price / Night</label>
+          <label><i class="fas fa-dollar-sign"></i> Min Price / Night</label>
           <input type="number" id="filterMinPrice" placeholder="$0" min="0" />
         </div>
         <div class="search-field">
-          <label>💰 Max Price / Night</label>
+          <label><i class="fas fa-dollar-sign"></i> Max Price / Night</label>
           <input type="number" id="filterMaxPrice" placeholder="$5000" min="0" />
         </div>
-        <button class="btn btn-primary" id="searchBtn">🔍 Search</button>
+        <button class="btn btn-primary" id="searchBtn"><i class="fas fa-search"></i> Search</button>
       </div>
     </div>
   </section>
 
   <!-- Hotels Section -->
-  <section class="section" style="padding-top:3rem;">
-    <div class="container">
+  <section class="section">
+    <div class="container reveal">
       <div class="section-header">
         <div class="section-label">Our Collection</div>
         <h2 class="section-title">Featured Hotels</h2>
@@ -84,11 +85,12 @@
   <!-- Footer -->
   <footer
     style="background:var(--bg-secondary);border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--text-secondary);font-size:0.85rem;">
-    <p>© 2024 <span style="color:var(--gold);">LuxeStay</span> · Hotel Reservation System · Built with ❤️</p>
+    <p>© 2026 <span style="color:var(--gold);">LuxeStay</span> · Hotel Reservation System · Built with ❤️</p>
   </footer>
 
   <div id="toast-container"></div>
   <script src="js/api.js"></script>
+  <script src="js/animations.js"></script>
   <script src="js/main.js"></script>
 </body>
 

@@ -43,7 +43,7 @@ function showToast(message, type = 'info') {
     }
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    const icons = { success: '<i class="fas fa-check-circle"></i>', error: '<i class="fas fa-exclamation-circle"></i>', info: '<i class="fas fa-info-circle"></i>' };
     toast.innerHTML = `${icons[type] || ''} ${message}`;
     container.appendChild(toast);
     setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3500);
@@ -52,7 +52,11 @@ function showToast(message, type = 'info') {
 // ─── Star Renderer ─────────────────────────────────────────────────────────
 function renderStars(rating, max = 5) {
     const r = Math.round(rating || 0);
-    return '★'.repeat(r) + '☆'.repeat(max - r);
+    let html = '';
+    for (let i = 1; i <= max; i++) {
+        html += i <= r ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>';
+    }
+    return html;
 }
 
 // ─── Date Formatter ────────────────────────────────────────────────────────

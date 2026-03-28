@@ -6,6 +6,7 @@
   <title>Checkout – LuxeStay</title>
   <meta name="description" content="Complete your hotel booking and proceed to payment."/>
   <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
     .checkout-page { min-height: 100vh; padding: 6rem 2rem 3rem; background: var(--gradient-hero); }
     .checkout-grid { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; max-width: 1000px; margin: 0 auto; align-items: start; }
@@ -42,14 +43,14 @@
 <div id="page-loader"><div class="logo-text">LuxeStay</div><div class="spinner"></div></div>
 
 <nav class="navbar">
-  <a href="index.html" class="nav-logo">🏨 LuxeStay</a>
-  <div class="nav-links">
-    <a href="index.html" class="hide-mobile">← Hotels</a>
-    <button id="userMenuBtn" style="display:none;">👤 <span class="user-name"></span></button>
-    <button id="navLogout" class="btn btn-secondary btn-sm" style="display:none;" onclick="Auth.logout()">Logout</button>
-    <a id="navLoginLink" href="login.html" class="btn-nav">Login</a>
-    <a id="navAdminLink" href="admin.html" class="hide-mobile">Admin</a>
-  </div>
+    <a href="index.html" class="nav-logo"><i class="fas fa-hotel"></i> LuxeStay</a>
+    <div class="nav-links">
+      <a href="index.html" class="hide-mobile"><i class="fas fa-arrow-left"></i> Hotels</a>
+      <button id="userMenuBtn" style="display:none;"><i class="fas fa-user-circle"></i> <span class="user-name"></span></button>
+      <button id="navLogout" class="btn btn-secondary btn-sm" style="display:none;" onclick="Auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      <a id="navLoginLink" href="login.html" class="btn-nav">Login</a>
+      <a id="navAdminLink" href="admin.html" class="hide-mobile">Admin</a>
+    </div>
 </nav>
 
 <div class="checkout-page">
@@ -60,15 +61,15 @@
 
   <div class="checkout-grid">
     <!-- Left: Payment Form -->
-    <div class="glass" style="padding:2rem;">
-      <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;">💳 Payment Details</h2>
+    <div class="glass reveal-left" style="padding:2rem;">
+      <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;"><i class="fas fa-credit-card"></i> Payment Details</h2>
       <div style="display:flex;flex-direction:column;gap:1.25rem;">
         <div class="form-group">
           <label>Payment Method</label>
           <div class="payment-methods" id="paymentMethods">
-            <div class="pm-btn active" data-method="Credit Card">💳 Credit Card</div>
-            <div class="pm-btn" data-method="Debit Card">🏧 Debit Card</div>
-            <div class="pm-btn" data-method="PayPal">🅿️ PayPal</div>
+            <div class="pm-btn active" data-method="Credit Card"><i class="fas fa-credit-card"></i> Credit Card</div>
+            <div class="pm-btn" data-method="Debit Card"><i class="fas fa-money-check"></i> Debit Card</div>
+            <div class="pm-btn" data-method="PayPal"><i class="fab fa-paypal"></i> PayPal</div>
           </div>
         </div>
         <div class="form-group">
@@ -90,18 +91,18 @@
           </div>
         </div>
         <div style="padding:0.85rem 1rem;background:var(--accent-dim);border:1px solid rgba(79,142,247,0.2);border-radius:var(--radius-sm);font-size:0.8rem;color:var(--text-secondary);">
-          🔒 This is a demo payment system. No real charges will be made.
+          <i class="fas fa-lock"></i> This is a demo payment system. No real charges will be made.
         </div>
         <button class="btn btn-primary btn-full" id="payBtn" style="font-size:1rem;padding:1rem;">
-          💳 Pay Now
+          <i class="fas fa-check-double"></i> Pay Now
         </button>
       </div>
     </div>
 
     <!-- Right: Booking Summary -->
-    <div>
+    <div class="reveal-right">
       <div class="glass" style="padding:1.75rem;margin-bottom:1.5rem;">
-        <h3 style="font-weight:700;margin-bottom:1.25rem;">📋 Booking Summary</h3>
+        <h3 style="font-weight:700;margin-bottom:1.25rem;"><i class="fas fa-clipboard-list"></i> Booking Summary</h3>
         <div class="summary-row"><span class="label">Hotel</span><span class="value" id="sumHotel">—</span></div>
         <div class="summary-row"><span class="label">Room Type</span><span class="value" id="sumRoom">—</span></div>
         <div class="summary-row"><span class="label">Check-in</span><span class="value" id="sumCheckIn">—</span></div>
@@ -111,7 +112,7 @@
         <div class="summary-row total-row"><span class="label">Total</span><span class="value" id="sumTotal">—</span></div>
       </div>
       <div class="glass" style="padding:1.25rem;font-size:0.82rem;color:var(--text-secondary);">
-        ✅ Free cancellation before check-in · 🔒 Secure booking · 🏅 Best price guaranteed
+        <i class="fas fa-check-circle"></i> Free cancellation before check-in · <i class="fas fa-shield-alt"></i> Secure booking · <i class="fas fa-medal"></i> Best price guaranteed
       </div>
     </div>
   </div>
@@ -120,7 +121,7 @@
 <!-- Success Overlay -->
 <div class="success-overlay" id="successOverlay">
   <div class="success-card">
-    <div class="success-icon">🎉</div>
+    <div class="success-icon" style="color:var(--success);"><i class="fas fa-check-circle"></i></div>
     <h2 style="font-family:var(--font-display);font-size:1.75rem;font-weight:700;margin-bottom:0.75rem;">Booking Confirmed!</h2>
     <p style="color:var(--text-secondary);margin-bottom:1.75rem;">Your payment was processed and your room is reserved. Check your dashboard for details.</p>
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
@@ -130,8 +131,9 @@
   </div>
 </div>
 
-<div id="toast-container"></div>
-<script src="js/api.js"></script>
-<script src="js/checkout.js"></script>
+  <div id="toast-container"></div>
+  <script src="js/api.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/checkout.js"></script>
 </body>
 </html>

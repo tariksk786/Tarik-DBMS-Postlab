@@ -54,30 +54,49 @@ document.addEventListener('DOMContentLoaded', () => {
     // Pay Button
     document.getElementById('payBtn').addEventListener('click', async () => {
         const cardName = document.getElementById('cardName').value.trim();
-        if (!cardName) { showToast('Please enter cardholder name.', 'error'); return; }
+        const cardNumber = document.getElementById('cardNumber').value.trim();
+        const cardExpiry = document.getElementById('cardExpiry').value.trim();
+        const cardCVV = document.getElementById('cardCVV').value.trim();
+
+        if (!cardName || !cardNumber || !cardExpiry || !cardCVV) { 
+            showToast('Please fill all payment details.', 'error'); return; 
+        }
 
         const payBtn = document.getElementById('payBtn');
-        payBtn.disabled = true; payBtn.textContent = '⏳ Processing Payment…';
-
+        payBtn.disabled = true; 
+        
         try {
-            // Step 1: Create booking
+            // Processing Simulation - Step 1
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Validating Card…';
+            await new Promise(r => setTimeout(r, 1200));
+
+            // Create booking in background
             const bookingRes = await apiFetch('/bookings', {
                 method: 'POST',
                 body: JSON.stringify({ room_id: roomId, check_in_date: checkIn, check_out_date: checkOut })
             });
             bookingId = bookingRes.bookingId;
 
-            // Step 2: Process payment
+            // Processing Simulation - Step 2
+            payBtn.innerHTML = '<i class="fas fa-shield-alt fa-spin"></i> Authorizing with Bank…';
+            await new Promise(r => setTimeout(r, 1500));
+
+            // Process payment
             await apiFetch('/payments', {
                 method: 'POST',
                 body: JSON.stringify({ booking_id: bookingId, payment_method: selectedMethod })
             });
 
+            // Finalizing
+            payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Success!';
+            await new Promise(r => setTimeout(r, 600));
+
             // Show success
             document.getElementById('successOverlay').classList.add('show');
         } catch (err) {
             showToast('Payment failed: ' + err.message, 'error');
-            payBtn.disabled = false; payBtn.textContent = '💳 Pay Now';
+            payBtn.disabled = false; 
+            payBtn.innerHTML = '<i class="fas fa-check-double"></i> Pay Now';
         }
     });
 });

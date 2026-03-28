@@ -6,6 +6,7 @@
   <title>Hotel Details – LuxeStay</title>
   <meta name="description" content="View hotel details, available rooms, and guest reviews. Book your stay today."/>
   <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
     .details-hero {
       min-height: 450px; display: flex; align-items: flex-end;
@@ -43,22 +44,22 @@
 
 <!-- Navbar -->
 <nav class="navbar">
-  <a href="index.html" class="nav-logo">🏨 LuxeStay</a>
-  <div class="nav-links">
-    <a href="index.html" class="hide-mobile">← All Hotels</a>
+    <a href="index.html" class="nav-logo"><i class="fas fa-hotel"></i> LuxeStay</a>
+    <div class="nav-links">
+      <a href="index.html" class="hide-mobile"><i class="fas fa-arrow-left"></i> All Hotels</a>
     <a href="dashboard.html" class="hide-mobile" id="navDashLink">My Bookings</a>
-    <a href="admin.html" id="navAdminLink" class="hide-mobile">Admin</a>
-    <a href="login.html" id="navLoginLink" class="btn-nav">Login</a>
-    <button id="userMenuBtn" style="display:none;">👤 <span class="user-name"></span></button>
-    <button id="navLogout" class="btn btn-secondary btn-sm" style="display:none;" onclick="Auth.logout()">Logout</button>
+      <a href="admin.html" id="navAdminLink" class="hide-mobile">Admin</a>
+      <a href="login.html" id="navLoginLink" class="btn-nav">Login</a>
+      <button id="userMenuBtn" style="display:none;"><i class="fas fa-user-circle"></i> <span class="user-name"></span></button>
+      <button id="navLogout" class="btn btn-secondary btn-sm" style="display:none;" onclick="Auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
   </div>
 </nav>
 
 <!-- Hotel Hero -->
 <div class="details-hero" id="detailsHero">
-  <div class="hotel-emoji" id="hotelEmoji">🏨</div>
-  <div class="hotel-header-info">
-    <div id="hotelLocation" style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:0.5rem;">📍 Loading…</div>
+  <div class="hotel-emoji" id="hotelEmoji"><i class="fas fa-hotel"></i></div>
+  <div class="hotel-header-info reveal">
+    <div id="hotelLocation" style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:0.5rem;"><i class="fas fa-map-marker-alt"></i> Loading…</div>
     <h1 id="hotelName">Loading Hotel…</h1>
     <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:0.75rem;">
       <div class="stars" id="hotelStars"></div>
@@ -128,15 +129,15 @@
 <div class="modal-overlay" id="reviewModal">
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-title">✍️ Write a Review</div>
+      <div class="modal-title"><i class="far fa-edit"></i> Write a Review</div>
       <button class="modal-close" data-close-modal>✕</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:1.25rem;">
       <div class="form-group">
         <label>Your Rating</label>
         <div class="star-input" id="starInput">
-          <span data-val="1">★</span><span data-val="2">★</span><span data-val="3">★</span>
-          <span data-val="4">★</span><span data-val="5">★</span>
+          <span data-val="1"><i class="fas fa-star"></i></span><span data-val="2"><i class="fas fa-star"></i></span><span data-val="3"><i class="fas fa-star"></i></span>
+          <span data-val="4"><i class="fas fa-star"></i></span><span data-val="5"><i class="fas fa-star"></i></span>
         </div>
       </div>
       <div class="form-group">
@@ -148,8 +149,9 @@
   </div>
 </div>
 
-<div id="toast-container"></div>
-<script src="js/api.js"></script>
-<script src="js/hotel-details.js"></script>
+  <div id="toast-container"></div>
+  <script src="js/api.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/hotel-details.js"></script>
 </body>
 </html>

@@ -3,17 +3,9 @@ const db = require('../config/db');
 // Get all hotels (with optional search/filter params)
 exports.getAllHotels = async (req, res) => {
     try {
-        const { location, minPrice, maxPrice, page = 1, limit = 6 } = req.query;
+        const { location, minPrice, maxPrice, capacity, page = 1, limit = 6 } = req.query;
         const offset = (page - 1) * limit;
-        let query = `
-            SELECT h.*, 
-                   ROUND(AVG(r.rating), 1) AS avg_rating,
-                   COUNT(DISTINCT r.id) AS review_count,
-                   MIN(rm.price_per_night) AS min_price
-            FROM hotels h
-            LEFT JOIN reviews r ON r.hotel_id = h.id
-            LEFT JOIN rooms rm ON rm.hotel_id = h.id
-        `;
+
         const params = [];
         const conditions = [];
 
@@ -22,31 +14,36 @@ exports.getAllHotels = async (req, res) => {
             params.push(`%${location}%`);
         }
         if (minPrice) {
-            conditions.push('rm.price_per_night >= ?');
+            conditions.push('EXISTS (SELECT 1 FROM rooms r2 WHERE r2.hotel_id = h.id AND r2.price_per_night >= ?)');
             params.push(minPrice);
         }
         if (maxPrice) {
-            conditions.push('rm.price_per_night <= ?');
+            conditions.push('EXISTS (SELECT 1 FROM rooms r2 WHERE r2.hotel_id = h.id AND r2.price_per_night <= ?)');
             params.push(maxPrice);
         }
-
-        if (conditions.length > 0) {
-            query += ' WHERE ' + conditions.join(' AND ');
+        if (capacity) {
+            conditions.push('EXISTS (SELECT 1 FROM rooms r2 WHERE r2.hotel_id = h.id AND r2.capacity >= ?)');
+            params.push(capacity);
         }
 
-        query += ` GROUP BY h.id ORDER BY avg_rating DESC LIMIT ? OFFSET ?`;
-        params.push(parseInt(limit), parseInt(offset));
+        let whereClause = conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : '';
 
-        const [hotels] = await db.query(query, params);
+        let query = `
+            SELECT h.*, 
+                   (SELECT ROUND(AVG(rating), 1) FROM reviews WHERE hotel_id = h.id) AS avg_rating,
+                   (SELECT COUNT(*) FROM reviews WHERE hotel_id = h.id) AS review_count,
+                   (SELECT MIN(price_per_night) FROM rooms WHERE hotel_id = h.id) AS min_price
+            FROM hotels h
+            ${whereClause}
+            ORDER BY avg_rating DESC
+            LIMIT ? OFFSET ?
+        `;
+        
+        const [hotels] = await db.query(query, [...params, parseInt(limit), parseInt(offset)]);
 
         // Get total count
-        let countQuery = 'SELECT COUNT(DISTINCT h.id) AS total FROM hotels h LEFT JOIN rooms rm ON rm.hotel_id = h.id';
-        const countParams = [];
-        if (conditions.length > 0) {
-            countQuery += ' WHERE ' + conditions.join(' AND ');
-            countParams.push(...params.slice(0, params.length - 2));
-        }
-        const [[{ total }]] = await db.query(countQuery, countParams);
+        let countQuery = `SELECT COUNT(*) AS total FROM hotels h ${whereClause}`;
+        const [[{ total }]] = await db.query(countQuery, params);
 
         res.json({ hotels, total, page: parseInt(page), pages: Math.ceil(total / limit) });
     } catch (err) {
