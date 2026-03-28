@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard – LuxeStay</title>
+  <meta name="description" content="Manage hotels, rooms, bookings, and users from the LuxeStay admin dashboard."/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .chart-box { background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+    .chart-title { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 1rem; }
+    .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    @media(max-width:768px){ .charts-grid{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+<div id="page-loader"><div class="logo-text">LuxeStay</div><div class="spinner"></div></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">🏨 LuxeStay</a>
+  <div class="nav-links">
+    <a href="index.html" class="hide-mobile">← Site</a>
+    <span style="color:var(--gold);font-size:0.85rem;font-weight:600;">⚙️ Admin Panel</span>
+    <button id="userMenuBtn" style="display:none;">👤 <span class="user-name"></span></button>
+    <a href="login.html" id="navLoginLink" class="btn-nav">Login</a>
+    <a id="navAdminLink" href="admin.html"></a>
+    <button id="navLogout" class="btn btn-secondary btn-sm" style="display:none;" onclick="Auth.logout()">Logout</button>
+  </div>
+</nav>
+
+<div class="dashboard-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Admin Menu</div>
+    <div class="sidebar-item active" data-tab-trigger="overview"><span>📊</span><span>Overview</span></div>
+    <div class="sidebar-item" data-tab-trigger="hotels"><span>🏨</span><span>Hotels</span></div>
+    <div class="sidebar-item" data-tab-trigger="rooms"><span>🚪</span><span>Rooms</span></div>
+    <div class="sidebar-item" data-tab-trigger="bookings"><span>📋</span><span>Bookings</span></div>
+    <div class="sidebar-item" data-tab-trigger="users"><span>👥</span><span>Users</span></div>
+    <hr class="divider" style="margin:0.75rem 0;"/>
+    <div class="sidebar-item" onclick="Auth.logout()" style="color:var(--danger);"><span>🚪</span><span>Logout</span></div>
+  </aside>
+
+  <main class="main-content">
+
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview">
+      <div class="page-header"><h1>Dashboard Overview</h1><p>Real-time hotel & booking analytics</p></div>
+      <div class="stat-grid" style="margin-bottom:2rem;">
+        <div class="stat-card"><div class="stat-icon gold">💰</div><div><div class="stat-value" id="statRevenue">$0</div><div class="stat-label">Total Revenue</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue">📋</div><div><div class="stat-value" id="statBookings">0</div><div class="stat-label">Total Bookings</div></div></div>
+        <div class="stat-card"><div class="stat-icon green">🏨</div><div><div class="stat-value" id="statHotels">0</div><div class="stat-label">Hotels</div></div></div>
+        <div class="stat-card"><div class="stat-icon purple">👥</div><div><div class="stat-value" id="statUsers">0</div><div class="stat-label">Registered Users</div></div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-box">
+          <div class="chart-title">📈 Monthly Revenue</div>
+          <canvas id="revenueChart" height="220"></canvas>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">🍩 Booking Status</div>
+          <canvas id="statusChart" height="220"></canvas>
+        </div>
+      </div>
+      <div class="glass" style="padding:1.5rem;">
+        <h3 style="font-weight:700;margin-bottom:1rem;">🏆 Top Hotels by Revenue</h3>
+        <div class="table-container"><table><thead><tr><th>#</th><th>Hotel</th><th>Revenue</th></tr></thead>
+        <tbody id="topHotelsTable"><tr><td colspan="3" style="text-align:center;padding:2rem;color:var(--text-secondary);">Loading…</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- HOTELS TAB -->
+    <div id="tab-hotels" style="display:none;">
+      <div class="page-header"><h1>Manage Hotels</h1><p>Add, edit, or remove hotels</p></div>
+      <div class="glass" style="padding:1.5rem;margin-bottom:1.5rem;">
+        <h3 style="font-weight:700;margin-bottom:1.25rem;">➕ Add New Hotel</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;" id="hotelForm">
+          <div class="form-group"><label>Hotel Name</label><input class="form-control" id="hName" placeholder="e.g. Grand Azure"/></div>
+          <div class="form-group"><label>Location</label><input class="form-control" id="hLocation" placeholder="e.g. Paris, France"/></div>
+          <div class="form-group" style="grid-column:1/-1;"><label>Description</label><textarea class="form-control" id="hDesc" rows="2" placeholder="Brief description…"></textarea></div>
+          <div class="form-group"><label>Image URL</label><input class="form-control" id="hImage" placeholder="https://…"/></div>
+          <div style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary btn-full" id="addHotelBtn">Add Hotel</button>
+          </div>
+        </div>
+      </div>
+      <div class="glass" style="padding:1.5rem;">
+        <h3 style="font-weight:700;margin-bottom:1rem;">All Hotels</h3>
+        <div class="table-container"><table><thead><tr><th>ID</th><th>Name</th><th>Location</th><th>Actions</th></tr></thead>
+        <tbody id="hotelsTableBody"><tr><td colspan="4" style="text-align:center;padding:2rem;"><div class="spinner"></div></td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ROOMS TAB -->
+    <div id="tab-rooms" style="display:none;">
+      <div class="page-header"><h1>Manage Rooms</h1><p>Add rooms to hotels</p></div>
+      <div class="glass" style="padding:1.5rem;margin-bottom:1.5rem;">
+        <h3 style="font-weight:700;margin-bottom:1.25rem;">➕ Add New Room</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group"><label>Hotel</label><select class="form-control" id="rHotelId"><option value="">Select Hotel…</option></select></div>
+          <div class="form-group"><label>Room Type</label><input class="form-control" id="rType" placeholder="e.g. Deluxe King"/></div>
+          <div class="form-group"><label>Price per Night ($)</label><input class="form-control" type="number" id="rPrice" placeholder="150"/></div>
+          <div class="form-group"><label>Capacity</label><input class="form-control" type="number" id="rCapacity" placeholder="2" min="1"/></div>
+          <div style="grid-column:1/-1;">
+            <button class="btn btn-primary" id="addRoomBtn">Add Room</button>
+          </div>
+        </div>
+      </div>
+      <div class="glass" style="padding:1.5rem;">
+        <h3 style="font-weight:700;margin-bottom:1rem;">Select Hotel to View Rooms</h3>
+        <select class="form-control" id="filterHotelRooms" style="max-width:300px;margin-bottom:1.25rem;"><option value="">Select Hotel…</option></select>
+        <div class="table-container"><table><thead><tr><th>ID</th><th>Hotel</th><th>Room Type</th><th>Price/Night</th><th>Capacity</th><th>Actions</th></tr></thead>
+        <tbody id="roomsTableBody"><tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-secondary);">Select a hotel above.</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- BOOKINGS TAB -->
+    <div id="tab-bookings" style="display:none;">
+      <div class="page-header"><h1>All Bookings</h1><p>View and manage every reservation</p></div>
+      <div class="glass" style="padding:1.5rem;">
+        <div class="table-container"><table><thead><tr>
+          <th>ID</th><th>User</th><th>Hotel</th><th>Room</th><th>Dates</th><th>Total</th><th>Status</th><th>Payment</th><th>Action</th>
+        </tr></thead>
+        <tbody id="allBookingsBody"><tr><td colspan="9" style="text-align:center;padding:2rem;"><div class="spinner"></div></td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- USERS TAB -->
+    <div id="tab-users" style="display:none;">
+      <div class="page-header"><h1>Registered Users</h1><p>Manage your customer accounts</p></div>
+      <div class="glass" style="padding:1.5rem;">
+        <div class="table-container"><table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
+        <tbody id="usersTableBody"><tr><td colspan="6" style="text-align:center;padding:2rem;"><div class="spinner"></div></td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/api.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

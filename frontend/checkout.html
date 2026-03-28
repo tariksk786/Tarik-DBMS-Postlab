@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout – LuxeStay</title>
+  <meta name="description" content="Complete your hotel booking and proceed to payment."/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .checkout-page { min-height: 100vh; padding: 6rem 2rem 3rem; background: var(--gradient-hero); }
+    .checkout-grid { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; max-width: 1000px; margin: 0 auto; align-items: start; }
+    .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row .label { color: var(--text-secondary); }
+    .summary-row .value { font-weight: 600; }
+    .total-row { padding: 1rem 0 0; }
+    .total-row .label { color: var(--text-primary); font-weight: 700; font-size: 1rem; }
+    .total-row .value { color: var(--gold); font-size: 1.4rem; font-weight: 800; }
+    .payment-methods { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .pm-btn {
+      flex: 1; min-width: 100px; padding: 0.75rem;
+      background: var(--bg-card); border: 2px solid var(--border);
+      border-radius: var(--radius-md); color: var(--text-secondary);
+      font-size: 0.85rem; font-weight: 500; text-align: center;
+      cursor: pointer; transition: var(--transition);
+    }
+    .pm-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+    .success-overlay {
+      position: fixed; inset: 0; z-index: 3000;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transition: var(--transition);
+    }
+    .success-overlay.show { opacity: 1; visibility: visible; }
+    .success-card { background: var(--bg-secondary); border: 1px solid rgba(34,197,94,0.3); border-radius: var(--radius-xl); padding: 3rem; text-align: center; max-width: 420px; width: 90%; }
+    .success-icon { font-size: 4rem; margin-bottom: 1rem; animation: pop 0.5s cubic-bezier(0.68,-0.55,0.27,1.55); }
+    @keyframes pop { from{transform:scale(0)} to{transform:scale(1)} }
+    @media(max-width:768px){ .checkout-grid{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+<div id="page-loader"><div class="logo-text">LuxeStay</div><div class="spinner"></div></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">🏨 LuxeStay</a>
+  <div class="nav-links">
+    <a href="index.html" class="hide-mobile">← Hotels</a>
+    <button id="userMenuBtn" style="display:none;">👤 <span class="user-name"></span></button>
+    <button id="navLogout" class="btn btn-secondary btn-sm" style="display:none;" onclick="Auth.logout()">Logout</button>
+    <a id="navLoginLink" href="login.html" class="btn-nav">Login</a>
+    <a id="navAdminLink" href="admin.html" class="hide-mobile">Admin</a>
+  </div>
+</nav>
+
+<div class="checkout-page">
+  <div style="max-width:1000px;margin:0 auto 2rem;">
+    <div class="section-label">Step 2 of 2</div>
+    <h1 style="font-family:var(--font-display);font-size:2rem;font-weight:700;margin-top:0.25rem;">Complete Your Booking</h1>
+  </div>
+
+  <div class="checkout-grid">
+    <!-- Left: Payment Form -->
+    <div class="glass" style="padding:2rem;">
+      <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;">💳 Payment Details</h2>
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div class="form-group">
+          <label>Payment Method</label>
+          <div class="payment-methods" id="paymentMethods">
+            <div class="pm-btn active" data-method="Credit Card">💳 Credit Card</div>
+            <div class="pm-btn" data-method="Debit Card">🏧 Debit Card</div>
+            <div class="pm-btn" data-method="PayPal">🅿️ PayPal</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Cardholder Name</label>
+          <input class="form-control" type="text" id="cardName" placeholder="John Doe"/>
+        </div>
+        <div class="form-group">
+          <label>Card Number</label>
+          <input class="form-control" type="text" id="cardNumber" placeholder="•••• •••• •••• ••••" maxlength="19"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label>Expiry Date</label>
+            <input class="form-control" type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5"/>
+          </div>
+          <div class="form-group">
+            <label>CVV</label>
+            <input class="form-control" type="text" id="cardCVV" placeholder="•••" maxlength="3"/>
+          </div>
+        </div>
+        <div style="padding:0.85rem 1rem;background:var(--accent-dim);border:1px solid rgba(79,142,247,0.2);border-radius:var(--radius-sm);font-size:0.8rem;color:var(--text-secondary);">
+          🔒 This is a demo payment system. No real charges will be made.
+        </div>
+        <button class="btn btn-primary btn-full" id="payBtn" style="font-size:1rem;padding:1rem;">
+          💳 Pay Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Right: Booking Summary -->
+    <div>
+      <div class="glass" style="padding:1.75rem;margin-bottom:1.5rem;">
+        <h3 style="font-weight:700;margin-bottom:1.25rem;">📋 Booking Summary</h3>
+        <div class="summary-row"><span class="label">Hotel</span><span class="value" id="sumHotel">—</span></div>
+        <div class="summary-row"><span class="label">Room Type</span><span class="value" id="sumRoom">—</span></div>
+        <div class="summary-row"><span class="label">Check-in</span><span class="value" id="sumCheckIn">—</span></div>
+        <div class="summary-row"><span class="label">Check-out</span><span class="value" id="sumCheckOut">—</span></div>
+        <div class="summary-row"><span class="label">Nights</span><span class="value" id="sumNights">—</span></div>
+        <div class="summary-row"><span class="label">Price / Night</span><span class="value" id="sumPrice">—</span></div>
+        <div class="summary-row total-row"><span class="label">Total</span><span class="value" id="sumTotal">—</span></div>
+      </div>
+      <div class="glass" style="padding:1.25rem;font-size:0.82rem;color:var(--text-secondary);">
+        ✅ Free cancellation before check-in · 🔒 Secure booking · 🏅 Best price guaranteed
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <div class="success-icon">🎉</div>
+    <h2 style="font-family:var(--font-display);font-size:1.75rem;font-weight:700;margin-bottom:0.75rem;">Booking Confirmed!</h2>
+    <p style="color:var(--text-secondary);margin-bottom:1.75rem;">Your payment was processed and your room is reserved. Check your dashboard for details.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="dashboard.html" class="btn btn-primary">View My Bookings</a>
+      <a href="index.html" class="btn btn-secondary">Back to Hotels</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/api.js"></script>
+<script src="js/checkout.js"></script>
+</body>
+</html>

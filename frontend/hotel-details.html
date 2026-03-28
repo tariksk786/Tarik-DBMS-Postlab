@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hotel Details – LuxeStay</title>
+  <meta name="description" content="View hotel details, available rooms, and guest reviews. Book your stay today."/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .details-hero {
+      min-height: 450px; display: flex; align-items: flex-end;
+      background-size: cover; background-position: center;
+      background-repeat: no-repeat;
+      background-image: linear-gradient(to bottom, rgba(10,14,26,0) 0%, rgba(10,14,26,0.95) 100%),
+                        linear-gradient(135deg, #101830, #0d1a2f);
+      padding: 3rem 2rem 2.5rem; margin-top: 70px;
+      position: relative;
+    }
+    .hotel-emoji { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-60%); font-size: 6rem; opacity: 0.3; }
+    .hotel-header-info { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; width: 100%; }
+    .hotel-header-info h1 { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 700; margin-bottom: 0.5rem; }
+    .rooms-list { display: flex; flex-direction: column; gap: 1rem; }
+    .review-card { padding: 1.25rem 1.5rem; background: var(--gradient-card); border: 1px solid var(--border); border-radius: var(--radius-md); }
+    .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .reviewer-name { font-weight: 600; font-size: 0.9rem; }
+    .review-date { font-size: 0.75rem; color: var(--text-muted); }
+    .review-comment { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; }
+    .sticky-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,14,26,0.95); backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .selected-room-info { font-size: 0.875rem; color: var(--text-secondary); }
+    .selected-room-info strong { color: var(--text-primary); font-size: 1rem; }
+    .star-input { display: flex; gap: 0.3rem; font-size: 1.5rem; cursor: pointer; }
+    .star-input span { color: var(--text-muted); transition: var(--transition); }
+    .star-input span.active, .star-input span:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+<div id="page-loader"><div class="logo-text">LuxeStay</div><div class="spinner"></div></div>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">🏨 LuxeStay</a>
+  <div class="nav-links">
+    <a href="index.html" class="hide-mobile">← All Hotels</a>
+    <a href="dashboard.html" class="hide-mobile" id="navDashLink">My Bookings</a>
+    <a href="admin.html" id="navAdminLink" class="hide-mobile">Admin</a>
+    <a href="login.html" id="navLoginLink" class="btn-nav">Login</a>
+    <button id="userMenuBtn" style="display:none;">👤 <span class="user-name"></span></button>
+    <button id="navLogout" class="btn btn-secondary btn-sm" style="display:none;" onclick="Auth.logout()">Logout</button>
+  </div>
+</nav>
+
+<!-- Hotel Hero -->
+<div class="details-hero" id="detailsHero">
+  <div class="hotel-emoji" id="hotelEmoji">🏨</div>
+  <div class="hotel-header-info">
+    <div id="hotelLocation" style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:0.5rem;">📍 Loading…</div>
+    <h1 id="hotelName">Loading Hotel…</h1>
+    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:0.75rem;">
+      <div class="stars" id="hotelStars"></div>
+      <span id="hotelRating" style="color:var(--text-secondary);font-size:0.9rem;"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container" style="padding-top:2.5rem;padding-bottom:8rem;">
+  <div style="display:grid;grid-template-columns:1fr 360px;gap:2.5rem;align-items:start;" id="detailsLayout">
+
+    <!-- Left: Rooms + Reviews -->
+    <div>
+      <!-- Description -->
+      <div class="glass" style="padding:1.5rem;margin-bottom:2rem;">
+        <h3 style="font-weight:600;margin-bottom:0.5rem;">About this Hotel</h3>
+        <p id="hotelDesc" style="color:var(--text-secondary);line-height:1.7;font-size:0.9rem;">Loading…</p>
+      </div>
+
+      <!-- Rooms -->
+      <div style="margin-bottom:2.5rem;">
+        <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:1.25rem;">Available Rooms</h2>
+        <div class="rooms-list" id="roomsList">
+          <div class="spinner"></div>
+        </div>
+      </div>
+
+      <!-- Reviews -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+          <h2 style="font-size:1.3rem;font-weight:700;">Guest Reviews</h2>
+          <button class="btn btn-secondary btn-sm" id="writeReviewBtn" onclick="openModal('reviewModal')">✍️ Write Review</button>
+        </div>
+        <div id="reviewsList" style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Booking Panel -->
+    <div style="position:sticky;top:90px;">
+      <div class="glass" style="padding:1.75rem;">
+        <h3 style="font-weight:700;margin-bottom:1.25rem;">📅 Select Your Dates</h3>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="form-group">
+            <label>Check-in Date</label>
+            <input class="form-control" type="date" id="checkIn"/>
+          </div>
+          <div class="form-group">
+            <label>Check-out Date</label>
+            <input class="form-control" type="date" id="checkOut"/>
+          </div>
+          <div id="selectedRoomNote" style="font-size:0.85rem;color:var(--text-secondary);padding:0.75rem;background:var(--gold-dim);border:1px solid rgba(245,200,66,0.2);border-radius:var(--radius-sm);">
+            👆 Select a room below to book
+          </div>
+          <button class="btn btn-primary btn-full" id="bookNowBtn" disabled>
+            Book Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal-overlay" id="reviewModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✍️ Write a Review</div>
+      <button class="modal-close" data-close-modal>✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+      <div class="form-group">
+        <label>Your Rating</label>
+        <div class="star-input" id="starInput">
+          <span data-val="1">★</span><span data-val="2">★</span><span data-val="3">★</span>
+          <span data-val="4">★</span><span data-val="5">★</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Comment</label>
+        <textarea class="form-control" id="reviewComment" rows="4" placeholder="Share your experience…"></textarea>
+      </div>
+      <button class="btn btn-primary btn-full" id="submitReviewBtn">Submit Review</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/api.js"></script>
+<script src="js/hotel-details.js"></script>
+</body>
+</html>
