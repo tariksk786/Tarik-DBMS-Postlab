@@ -16,14 +16,34 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
-app.use('/api/auth',     require('./routes/auth'));
-app.use('/api/hotels',   require('./routes/hotels'));
-app.use('/api/rooms',    require('./routes/rooms'));
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/hotels', require('./routes/hotels'));
+app.use('/api/rooms', require('./routes/rooms'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/payments', require('./routes/payments'));
-app.use('/api/admin',    require('./routes/admin'));
+app.use('/api/admin', require('./routes/admin'));
 
 // ─── Health Check & API Info ───────────────────────────────────────────────────
+app.get('/api/setup-db', async (req, res) => {
+    try {
+        const fs = require('fs');
+        const sqlPath = path.join(__dirname, '../database.sql');
+        let sqlContent = fs.readFileSync(sqlPath, 'utf8');
+
+        sqlContent = sqlContent.replace(/CREATE DATABASE IF NOT EXISTS.*;/gi, '');
+        sqlContent = sqlContent.replace(/USE .*; /gi, '');
+
+        const statements = sqlContent.split(';').map(s => s.trim()).filter(s => s.length > 5);
+
+        for (const stmt of statements) {
+            try { await db.query(stmt); } catch (e) { /* ignore already exists */ }
+        }
+        res.json({ message: '✅ Database Setup Successful!' });
+    } catch (err) {
+        res.status(500).json({ error: 'Setup Failed', details: err.message });
+    }
+});
+
 app.get('/api/status', (req, res) => {
     res.json({ message: '🏨 Hotel Reservation API is running!', version: '1.0.0' });
 });
