@@ -4,8 +4,13 @@ require('dotenv').config();
 let pool;
 
 if (process.env.DATABASE_URL) {
-    // If DATABASE_URL is provided (typical on Render/Aiven), use it directly
-    pool = mysql.createPool(process.env.DATABASE_URL + '?ssl={"rejectUnauthorized":false}');
+    // If DATABASE_URL is provided, safely append the SSL parameter
+    const baseUrl = process.env.DATABASE_URL.trim();
+    // Aiven's URI usually has ?ssl-mode=REQUIRED. We append our SSL object properly.
+    const separator = baseUrl.includes('?') ? '&' : '?';
+    const fullUrl = baseUrl + separator + 'ssl={"rejectUnauthorized":false}';
+    
+    pool = mysql.createPool(fullUrl);
     console.log('🔗 Using DATABASE_URL for connection.');
 } else {
     // Fallback to individual variables for local development
