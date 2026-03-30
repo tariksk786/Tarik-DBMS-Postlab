@@ -45,7 +45,7 @@ app.get('/api/setup-db', async (req, res) => {
 });
 
 app.get('/api/status', (req, res) => {
-    res.json({ message: '🏨 Hotel Reservation API is running!', version: '1.0.0' });
+    res.json({ message: '🏨 Hotel Reservation API is running!', version: '1.1.0' });
 });
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────
